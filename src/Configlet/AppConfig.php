@@ -14,12 +14,14 @@ namespace Configlet;
 
 use \Configlet\Config;
 use \Configlet\Exception;
+use \IteratorAggregate;
+use \ArrayIterator;
 
 /**
  * @property \Configlet\Config[] $modules
  * @property \Configlet\Config[] $proxyCache
  */
-class AppConfig implements Config {
+class AppConfig implements IteratorAggregate, Config {
 
     const APP_MODULE = 'app';
 
@@ -148,6 +150,10 @@ class AppConfig implements Config {
      */
     public function offsetUnset($offset) {
         // TODO: Implement offsetUnset() method.
+    }
+
+    public function getIterator() {
+
     }
 
 }
