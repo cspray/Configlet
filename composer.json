@@ -1,0 +1,11 @@
+{
+    "name": "cspray/configlet",
+    "description": "Library for managing configurations in PHP applications",
+    "keywords": ["php", "configuration"],
+    "autoload": {
+        "psr-0": {
+            "Configlet\\": "src/"
+        }
+    }
+
+}

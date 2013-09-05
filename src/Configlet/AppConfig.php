@@ -1,0 +1,141 @@
+<?php
+
+/**
+ *
+ * 
+ * @author  Charles Sprayberry
+ * @license See LICENSE in source root
+ * @version 0.1
+ * @since   0.1
+ */
+
+namespace Configlet;
+
+use \Configlet\Config;
+use \Configlet\Exception;
+
+/**
+ * @property \Configlet\Config[] $modules
+ */
+class AppConfig implements Config {
+
+    const APP_MODULE = 'app';
+
+    const IMMUTABLE_PROXY = 'immutable_proxy';
+    const IMMUTABLE = 'immutable';
+    const MUTABLE = 'mutable';
+
+    /**
+     * @property \Configlet\Config[]
+     */
+    private $modules = [];
+
+    private $proxyCache = [];
+
+    public function __construct() {
+        $this->modules[self::APP_MODULE] = new MutableConfig(self::APP_MODULE);
+
+    }
+
+    /**
+     * Returns 'master' as this is the configuration keeping up with the whole
+     * thing.
+     *
+     * @return string
+     */
+    public function getModuleName() {
+        return 'master';
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.0.0)<br/>
+     * Whether a offset exists
+     *
+     * @link http://php.net/manual/en/arrayaccess.offsetexists.php
+     * @param mixed $offset <p>
+     * An offset to check for.
+     * </p>
+     * @return boolean true on success or false on failure.
+     * </p>
+     * <p>
+     * The return value will be casted to boolean if non-boolean was returned.
+     */
+    public function offsetExists($offset) {
+        return isset($this->modules[self::APP_MODULE][$offset]);
+    }
+
+    /**
+     *
+     * @param string $offset
+     * @return mixed
+     */
+    public function offsetGet($offset) {
+        if (isset($this->modules[$offset])) {
+            return $this->getModuleConfig($offset);
+        }
+
+        $module = self::APP_MODULE;
+        $parameter = $offset;
+
+        if (\strpos($offset, '.')) {
+            list($module, $parameter) = \explode('.', $offset);
+        }
+
+        if (!isset($this->modules[$module])) {
+            return null;
+        }
+
+        return $this->modules[$module][$parameter];
+    }
+
+    private function getModuleConfig($module) {
+        if ($this['configlet.module_return_type'] === self::MUTABLE) {
+            return $this->modules[$module];
+        }
+
+        if (!isset($this->proxyCache[$module])) {
+            $this->proxyCache[$module] = new ImmutableProxyConfig($this->modules[$module]);
+        }
+
+        return $this->proxyCache[$module];
+    }
+
+    /**
+     * @param string $offset
+     * @param mixed $value
+     * @return void
+     *
+     * @throws \Configlet\Exception\IllegalConfigOperationException
+     */
+    public function offsetSet($offset, $value) {
+        $module = self::APP_MODULE;
+        $parameter = $offset;
+
+        // we are not doing a strict boolean check here for a reason
+        // if you really did have the '.' as the first character that means
+        // when we explode our $module is '.' which makes no sense
+        if (\strpos($offset, '.')) {
+            list($module, $parameter) = \explode('.', $offset, 2);
+        }
+
+        if (!isset($this->modules[$module])) {
+            $this->modules[$module] = new MutableConfig($module);
+        }
+
+        $this->modules[$module][$parameter] = $value;
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.0.0)<br/>
+     * Offset to unset
+     * @link http://php.net/manual/en/arrayaccess.offsetunset.php
+     * @param mixed $offset <p>
+     * The offset to unset.
+     * </p>
+     * @return void
+     */
+    public function offsetUnset($offset) {
+        // TODO: Implement offsetUnset() method.
+    }
+
+}
