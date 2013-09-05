@@ -25,5 +25,12 @@ class MutableConfigTest extends \PHPUnit_Framework_TestCase {
         $Config[1] = 'foo';
     }
 
+    public function testSettingKeyThenUnsettingItProperlyDestroysConfiguration() {
+        $Config = new MutableConfig('foo');
+        $Config['bar'] = 'configlet';
+        $this->assertSame('configlet', $Config['bar']);
+        unset($Config['bar']);
+        $this->assertNull($Config['bar']);
+    }
 
 }
