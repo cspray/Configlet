@@ -1,7 +1,8 @@
 <?php
 
 /**
- *
+ * Implementation of Configlet\Config that acts as an overall or master configuration
+ * for an app.
  * 
  * @author  Charles Sprayberry
  * @license See LICENSE in source root
@@ -26,12 +27,29 @@ class AppConfig implements Config {
     const MUTABLE = 'mutable';
 
     /**
+     * A collection of MutableConfig objects that allow writing module specific
+     * parameter values.
+     *
+     * [module => Config]
+     *
      * @property \Configlet\Config[]
      */
     private $modules = [];
 
+    /**
+     * A cache of ImmutableProxyConfig objects so we don't create unneccessary
+     * objects for successive calls to the same module.
+     *
+     * [module => Config]
+     *
+     * @property \Configlet\Config[]
+     */
     private $proxyCache = [];
 
+    /**
+     * We are ensuring the app module is set to a configuration so that if a module
+     * is not appropriately set
+     */
     public function __construct() {
         $this->modules[self::APP_MODULE] = new MutableConfig(self::APP_MODULE);
 
@@ -115,7 +133,7 @@ class AppConfig implements Config {
         // if you really did have the '.' as the first character that means
         // when we explode our $module is '.' which makes no sense
         if (\strpos($offset, '.')) {
-            list($module, $parameter) = \explode('.', $offset, 2);
+            list($module, $parameter) = \explode('.', $offset);
         }
 
         if (!isset($this->modules[$module])) {
