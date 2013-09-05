@@ -1,5 +1,7 @@
 # Configlet
 
+> This library is still under construction and has not been released yet
+
 A PHP library to help manage your application and module configs simply and easily.
 
 ## Project Goals
