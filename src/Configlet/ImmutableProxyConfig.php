@@ -1,28 +1,43 @@
 <?php
 
 /**
+ * Implementation of Configlet\Config that does not allow the mutation of data
+ * and reads data from a different Config implementation.
  * 
- * @author Charles Sprayberry
+ * @author  Charles Sprayberry
  * @license See LICENSE in source root
+ * @version 0.1
+ * @since   0.1
  */
 
 namespace Configlet;
 
-use \Configlet\Exception\IllegalConfigOperationException;
-
-class ImmutableProxyConfig implements Config {
+/**
+ * The primary use for this configuration is that you can provide a read-only end
+ * to consumers of the configuration while still allowing writing on the end that
+ * sets the configuration.
+ *
+ * By utilizing this object you have an amount of assurance that the configuration
+ * given to a consumer cannot be changed and that, if that configuration is
+ * properly utilized, the values you expect will be there before and after the
+ * operation.
+ */
+class ImmutableProxyConfig extends ImmutableConfig {
 
     /**
      * @property \Configlet\Config
      */
     private $Proxy;
 
+    /**
+     * @param \Configlet\Config $Config
+     */
     public function __construct(Config $Config) {
         $this->Proxy = $Config;
     }
 
     /**
-     *
+     * Returns the module for the Config object being proxied.
      *
      * @return string
      */
@@ -31,7 +46,7 @@ class ImmutableProxyConfig implements Config {
     }
 
     /**
-     *
+     * Returns whether the parameter exists for the Config object being proxied
      *
      * @param string $offset
      * @return boolean
@@ -41,38 +56,13 @@ class ImmutableProxyConfig implements Config {
     }
 
     /**
-     *
+     * Returns the value for the Config object being proxied
      *
      * @param string $offset
      * @return mixed
      */
     public function offsetGet($offset) {
         return $this->Proxy[$offset];
-    }
-
-    /**
-     * This is an invalid operation on an immutable object.
-     *
-     * @param string $offset
-     * @param mixed $value
-     *
-     * @throws \Configlet\Exception\IllegalConfigOperationException
-     */
-    public function offsetSet($offset, $value) {
-        $message = 'You may not change the value of a %s';
-        throw new IllegalConfigOperationException(\sprintf($message, __CLASS__));
-    }
-
-    /**
-     * This is an invalid operation on an immutable object.
-     *
-     * @param string $offset
-     *
-     * @throws \Configlet\Exception\IllegalConfigOperationException
-     */
-    public function offsetUnset($offset) {
-        $message = 'You may not unset the value of a %s';
-        throw new IllegalConfigOperationException(\sprintf($message, __CLASS__));
     }
 
 }
