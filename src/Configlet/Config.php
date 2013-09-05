@@ -9,8 +9,9 @@
 namespace Configlet;
 
 use \ArrayAccess;
+use \Traversable;
 
-interface Config extends ArrayAccess {
+interface Config extends ArrayAccess, Traversable {
 
     /**
      * The name of the module this configuration belongs to.
