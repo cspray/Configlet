@@ -1,0 +1,17 @@
+before_commands:
+  - "composer install --no-dev --prefer-source"
+
+tools:
+  php_code_coverage:
+    enabled: true
+    test_command: phpunit --configuration ./tests/ConfigletTest/travis_config.xml
+
+  php_cpd: true
+  php_loc: true
+  php_mess_detector: true
+  php_pdepend: true
+  php_analyzer:
+    enabled: true
+    filter:
+      paths: ["src/*", "tests/*"]
+  sensiolabs_security_checker: true

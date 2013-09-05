@@ -29,7 +29,7 @@ If you have an existing project you can add the following to your composer.json.
 }
 ```
 
-If you're anti-Composer or can't install through this method you can always `git clone` this repository or [download a zip of the source][configlet_download]. Please note that if you do not install through Composer you will have to initiate your own autoloading. Configlet should be compatible with any PSR-0 style autoloader.
+If you're anti-Composer or can't install through this method you can always `git clone https://github.com/cspray/Configlet.git` this repository or [download a zip of the source][configlet_download]. Please note that if you do not install through Composer you will have to initiate your own autoloading. Configlet should be compatible with any PSR-0 style autoloader.
 
 After you've gotten the library installed it is highly recommended that you check out the Getting Started tutorial in `/doc/001-getting-started.md`.
 

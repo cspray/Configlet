@@ -1,7 +1,8 @@
 <?php
 
 /**
- *
+ * Implementation of Configlet\Config that acts as an overall or master configuration
+ * for an app.
  * 
  * @author  Charles Sprayberry
  * @license See LICENSE in source root
@@ -16,6 +17,7 @@ use \Configlet\Exception;
 
 /**
  * @property \Configlet\Config[] $modules
+ * @property \Configlet\Config[] $proxyCache
  */
 class AppConfig implements Config {
 
@@ -26,12 +28,29 @@ class AppConfig implements Config {
     const MUTABLE = 'mutable';
 
     /**
+     * A collection of MutableConfig objects that allow writing module specific
+     * parameter values.
+     *
+     * [module => Config]
+     *
      * @property \Configlet\Config[]
      */
     private $modules = [];
 
+    /**
+     * A cache of ImmutableProxyConfig objects so we don't create unneccessary
+     * objects for successive calls to the same module.
+     *
+     * [module => Config]
+     *
+     * @property \Configlet\Config[]
+     */
     private $proxyCache = [];
 
+    /**
+     * We are ensuring the app module is set to a configuration so that if a module
+     * is not appropriately set we return an object and not just a null value
+     */
     public function __construct() {
         $this->modules[self::APP_MODULE] = new MutableConfig(self::APP_MODULE);
 
@@ -48,17 +67,10 @@ class AppConfig implements Config {
     }
 
     /**
-     * (PHP 5 &gt;= 5.0.0)<br/>
-     * Whether a offset exists
      *
-     * @link http://php.net/manual/en/arrayaccess.offsetexists.php
-     * @param mixed $offset <p>
-     * An offset to check for.
-     * </p>
-     * @return boolean true on success or false on failure.
-     * </p>
-     * <p>
-     * The return value will be casted to boolean if non-boolean was returned.
+     *
+     * @param string $offset
+     * @return boolean
      */
     public function offsetExists($offset) {
         return isset($this->modules[self::APP_MODULE][$offset]);
@@ -115,7 +127,7 @@ class AppConfig implements Config {
         // if you really did have the '.' as the first character that means
         // when we explode our $module is '.' which makes no sense
         if (\strpos($offset, '.')) {
-            list($module, $parameter) = \explode('.', $offset, 2);
+            list($module, $parameter) = \explode('.', $offset);
         }
 
         if (!isset($this->modules[$module])) {
