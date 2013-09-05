@@ -17,6 +17,7 @@ use \Configlet\Exception;
 
 /**
  * @property \Configlet\Config[] $modules
+ * @property \Configlet\Config[] $proxyCache
  */
 class AppConfig implements Config {
 
@@ -48,7 +49,7 @@ class AppConfig implements Config {
 
     /**
      * We are ensuring the app module is set to a configuration so that if a module
-     * is not appropriately set
+     * is not appropriately set we return an object and not just a null value
      */
     public function __construct() {
         $this->modules[self::APP_MODULE] = new MutableConfig(self::APP_MODULE);
@@ -66,17 +67,10 @@ class AppConfig implements Config {
     }
 
     /**
-     * (PHP 5 &gt;= 5.0.0)<br/>
-     * Whether a offset exists
      *
-     * @link http://php.net/manual/en/arrayaccess.offsetexists.php
-     * @param mixed $offset <p>
-     * An offset to check for.
-     * </p>
-     * @return boolean true on success or false on failure.
-     * </p>
-     * <p>
-     * The return value will be casted to boolean if non-boolean was returned.
+     *
+     * @param string $offset
+     * @return boolean
      */
     public function offsetExists($offset) {
         return isset($this->modules[self::APP_MODULE][$offset]);
