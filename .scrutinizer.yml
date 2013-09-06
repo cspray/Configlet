@@ -5,6 +5,8 @@ tools:
   php_code_coverage:
     enabled: true
     test_command: phpunit --configuration ./tests/ConfigletTest/travis_config.xml
+    filter:
+      paths: ["src/*"]
 
   php_cpd: true
   php_loc: true
