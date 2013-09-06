@@ -42,7 +42,11 @@ So, we've used Configlet to store a configuration value indicating our applicati
 
  What exactly has your application gained though?
 
- - Encapsulation of configuration writing and reading
+ - Encapsulation of configuration writing and reading.
+
     The writing of the configuration parameters is independent of the rest of the code and can be done early in your bootstrap's lifecycle. More importantly though the reading and consumption of our configuration values can be encapsulated; modules get the configuration that modules need and nothing else.
 
+- No more need for boilerplate `isset()` checks for config keys
+
+    Configlet takes care of all the checking for the presence of configuration values and can gracefully handle configuration values that aren't present; without causing an error to be triggered in your application. Ultimately this makes for less boilerplate code you have to deal with when working with configuration values.
 
