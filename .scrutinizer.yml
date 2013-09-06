@@ -7,7 +7,7 @@ tools:
     test_command: phpunit --configuration ./tests/ConfigletTest/travis_config.xml
     filter:
       paths: ["src/*"]
-      excluded_paths: ["tests/*", "tests/ConfigletTest/Stubs/BaseConfigStub.php"]
+      excluded_paths: ["tests/*"]
   php_cpd: true
   php_loc:
     enabled: true
