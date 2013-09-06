@@ -11,7 +11,7 @@ tools:
   php_cpd: true
   php_loc:
     enabled: true
-    command: phploc ./
+    command: phploc --verbose
     names:
       - '*.php'
   php_mess_detector: true
