@@ -137,9 +137,20 @@ class AppConfig implements IteratorAggregate, Config {
             return $this->modules[$module];
         }
 
+        if ($this['configlet.module_return_type'] === self::IMMUTABLE) {
+            $data = [];
+            foreach($this->modules[$module] as $key => $val) {
+                $data[$key] = $val;
+            }
+
+            return new ImmutableConfig($module, $data);
+        }
+
         if (!isset($this->proxyCache[$module])) {
             $this->proxyCache[$module] = new ImmutableProxyConfig($this->modules[$module]);
         }
+
+
 
         return $this->proxyCache[$module];
     }

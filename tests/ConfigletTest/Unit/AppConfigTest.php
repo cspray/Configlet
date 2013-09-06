@@ -120,7 +120,18 @@ class AppConfigTest extends \PHPUnit_Framework_TestCase {
         $this->assertFalse(isset($Config['module']));
         $Config['module.param'] = 'foo';
         $this->assertTrue(isset($Config['module']));
+    }
 
+    public function testSettingModuleReturnTypeToImmutableGivesUsAnImmutableObject() {
+        $Config = new AppConfig();
+        $Config['configlet.foo'] = 'something';
+        $Config['configlet.module_return_type'] = AppConfig::IMMUTABLE;
+
+        $CfgltStore = $Config['configlet'];
+        $this->assertInstanceOf('\\Configlet\\ImmutableConfig', $CfgltStore);
+        $this->assertNotInstanceOf('\\Configlet\\ImmutableProxyConfig', $CfgltStore);
+        $this->assertSame('configlet', $CfgltStore->getModuleName());
+        $this->assertSame('something', $CfgltStore['foo']);
     }
 
 
