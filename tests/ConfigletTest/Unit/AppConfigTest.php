@@ -12,11 +12,15 @@ use \Configlet\AppConfig;
 
 class AppConfigTest extends \PHPUnit_Framework_TestCase {
 
+    public function testGettingModuleName() {
+        $Config = new AppConfig();
+        $this->assertSame('master', $Config->getModuleName());
+    }
+
     public function testSettingParameterWithNoModuleSeparatorAddsToApplicationConfig() {
         $Config = new AppConfig();
         $Config['foo'] = 'bar';
 
-        /** @var \Configlet\ModuleConfig $AppStore */
         $AppStore = $Config[$Config::APP_MODULE];
         $this->assertInstanceOf('\\Configlet\\ImmutableProxyConfig', $AppStore);
         $this->assertSame('bar', $AppStore['foo']);
@@ -79,5 +83,38 @@ class AppConfigTest extends \PHPUnit_Framework_TestCase {
         $second = $Config['configlet'];
         $this->assertSame($first, $second);
     }
+
+    public function testUnsettingSetValueDestroysAppropriateKey() {
+        $Config = new AppConfig();
+        $Config['something'] = 'yea';
+        $this->assertSame('yea', $Config['something']);
+        unset($Config['something']);
+        $this->assertNull($Config['something']);
+    }
+
+    public function testIteratingOverConfigs() {
+        $Config = new AppConfig();
+        $Config['foo'] = 'getting app module';
+        $Config['configlet.something'] = 'a configlet module config';
+        $Config['foo.bar'] = 'baz';
+
+        $actual = [];
+        /** @var \Configlet\MutableConfig $MutableConfig */
+        foreach($Config as $module => $MutableConfig) {
+            $actual[$module] = $MutableConfig->getModuleName();
+        }
+
+        $expected = ['app' => 'app', 'configlet' => 'configlet', 'foo' => 'foo'];
+        $this->assertSame($expected, $actual);
+    }
+
+    public function testSettingModuleConfigurationReturnsTrueCheckingForThatValueExistence() {
+        $Config = new AppConfig();
+        $Config['configlet.foo'] = 'something';
+        $this->assertSame('something', $Config['configlet.foo']);
+        $this->assertTrue(isset($Config['configlet.foo']));
+    }
+
+
 
 }

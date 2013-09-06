@@ -4,7 +4,7 @@
 
 > This library is still under construction and has not been released yet
 
-A PHP library to help manage your application and module configs simply and easily.
+A PHP library to help manage your application and module configs simply and easily. Check out the Roadmap in `/doc/000-roadmap.md` for new and upcoming features.
 
 ## Project Goals
 
@@ -65,7 +65,7 @@ All configurations applied to a `Configlet\AppConfig` are done in the form:
 
 `<module>.<parameter>`
 
-The configurations keys set that do not follow this format are automagically included into a module we call 'app' and should deal with app-specific configuration values. The 'module.param' configuration creates a new `Configlet\ModuleConfig` specific to 'module' that stores the appropriate configuration values. When you access a module name, in this case 'module', you get back an object that allows read-only access to that module's configuration. This particular read-only implementation is actually just a proxy to a read-write Config that allows writing of the configuration from the app side and reading from the config consumer side.
+The configurations keys set that do not follow this format are automagically included into a module we call 'app' (e.g. 'foo' is equivalent to 'app.foo'). It is recommended that app wide or non-module specific applications should go here. The 'module.param' configuration creates a new `Configlet\MutableConfig` specific to 'module' that stores the appropriate configuration values. When you access a module name, in this case 'module', you get back an object that allows read-only access to that module's configuration. This particular read-only implementation is actually just a proxy to the MutableConfig that allows writing of the configuration from the app side and reading from the config consumer side.
 
 This is the basic, "out of the box" behavior for Configlet. Check out `/doc` for ways you can change that behavior and more details about Configlet in general.
 

@@ -37,7 +37,7 @@ class MutableConfig extends BaseConfig {
      * @return void
      */
     public function offsetUnset($offset) {
-        // TODO: Implement offsetUnset() method.
+        unset($this->store[$offset]);
     }
 
 }

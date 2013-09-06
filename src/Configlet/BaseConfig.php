@@ -13,8 +13,10 @@
 
 namespace Configlet;
 
+use \Configlet\Exception\IllegalConfigOperationException;
 use \IteratorAggregate;
 use \ArrayIterator;
+
 
 abstract class BaseConfig implements IteratorAggregate, Config {
 
@@ -30,9 +32,20 @@ abstract class BaseConfig implements IteratorAggregate, Config {
 
     /**
      * @param string $moduleName
+     *
+     * @throws \Configlet\Exception\IllegalConfigOperationException
      */
     public function __construct($moduleName) {
-        $this->name = (string) $moduleName;
+        if (!\is_string($moduleName)) {
+            $message = 'The module name must be a string value and a type of \'%s\' was given';
+            throw new IllegalConfigOperationException(\sprintf($message, \gettype($moduleName)));
+        }
+
+        if (empty($moduleName)) {
+            throw new IllegalConfigOperationException('You must set a valid, non-empty module name for Configlet configurations');
+        }
+
+        $this->name = $moduleName;
     }
 
     /**
