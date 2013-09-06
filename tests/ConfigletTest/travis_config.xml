@@ -28,7 +28,7 @@
     <filter>
         <blacklist>
             <directory suffix=".php">./ConfigletTest/Stubs/</directory>
-            <file>../../vendor/composer/ClassLoader.php</file>
+            <directory suffix=".php">../../vendor/</directory>
         </blacklist>
     </filter>
 
