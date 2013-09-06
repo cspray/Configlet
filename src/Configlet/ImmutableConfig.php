@@ -24,6 +24,9 @@ class ImmutableConfig extends BaseConfig implements Config {
      */
     public function __construct($moduleName, array $store) {
         parent::__construct($moduleName);
+        foreach ($store as $key => $val) {
+            $this->store[$key] = $val;
+        }
     }
 
     /**
