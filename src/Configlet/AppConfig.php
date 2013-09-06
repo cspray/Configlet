@@ -13,7 +13,7 @@
 namespace Configlet;
 
 use \Configlet\Config;
-use \Configlet\Exception;
+use \Configlet\Exception\IllegalConfigOperationException;
 use \IteratorAggregate;
 use \ArrayIterator;
 
@@ -110,6 +110,11 @@ class AppConfig implements IteratorAggregate, Config {
      * @throws \Configlet\Exception\IllegalConfigOperationException
      */
     public function offsetSet($offset, $value) {
+        if (!\is_string($offset)) {
+            $message = 'A configuration key must be a string and a value with type \'%s\' was provided';
+            throw new IllegalConfigOperationException(\sprintf($message, \gettype($offset)));
+        }
+
         list($module, $parameter) = $this->getModuleAndParameter($offset);
 
         if (!isset($this->modules[$module])) {
