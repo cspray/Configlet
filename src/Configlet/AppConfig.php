@@ -75,6 +75,10 @@ class AppConfig implements IteratorAggregate, Config {
      * @return boolean
      */
     public function offsetExists($offset) {
+        if (isset($this->modules[$offset])) {
+            return true;
+        }
+
         list($module, $parameter) = $this->getModuleAndParameter($offset);
         return isset($this->modules[$module][$parameter]);
     }

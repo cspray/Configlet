@@ -115,6 +115,14 @@ class AppConfigTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue(isset($Config['configlet.foo']));
     }
 
+    public function testCheckExistenceOfModuleParameterBeforeAndAfterSettingModuleConfiguration() {
+        $Config = new AppConfig();
+        $this->assertFalse(isset($Config['module']));
+        $Config['module.param'] = 'foo';
+        $this->assertTrue(isset($Config['module']));
+
+    }
+
 
 
 }

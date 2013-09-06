@@ -27,6 +27,7 @@
     </logging>
     <filter>
         <blacklist>
+            <directory suffix=".php">./ConfigletTest/Stubs/</directory>
             <file>../../vendor/composer/ClassLoader.php</file>
         </blacklist>
     </filter>

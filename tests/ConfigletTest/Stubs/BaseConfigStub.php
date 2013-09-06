@@ -9,6 +9,9 @@ namespace ConfigletTest\Stubs;
 
 use \Configlet\BaseConfig;
 
+/**
+ * @codeCoverageIgnore
+ */
 class BaseConfigStub extends BaseConfig {
 
     /**
