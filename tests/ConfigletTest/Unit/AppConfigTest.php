@@ -134,6 +134,14 @@ class AppConfigTest extends \PHPUnit_Framework_TestCase {
         $this->assertSame('something', $CfgltStore['foo']);
     }
 
+    public function testSettingModuleWithEmptyStringThrowsException() {
+        $Config = new AppConfig();
+        $message = 'A configuration key must be a string and a value with type \'array\' was provided';
+        $this->setExpectedException('\\Configlet\\Exception\\IllegalConfigOperationException', $message);
+        $Config[[]] = 'something';
+
+    }
+
 
 
 }
