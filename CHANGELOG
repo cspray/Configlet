@@ -2,4 +2,5 @@
 
 - Initial implementation with Config interface
 - AppConfig, MutableConfig, ImmutableConfig, ImmutableProxyConfig implementations provided
-- General exception added
+- General-use IllegalConfigOperationException exception added
+
