@@ -102,6 +102,17 @@ class MasterConfigTest extends \PHPUnit_Framework_TestCase {
         $this->assertNull($Config['something']);
     }
 
+    public function testUnsettModuleParameterUnsetsModuleConfigurationNotAppConfiguration() {
+        $Config = new MasterConfig();
+        $Config['something'] = 'foo';
+        $Config['module.something'] = 'bar';
+        $this->assertSame('foo', $Config['something']);
+        $this->assertSame('bar', $Config['module.something']);
+        unset($Config['module.something']);
+        $this->assertSame('foo', $Config['something']);
+        $this->assertNull($Config['module.something']);
+    }
+
     public function testUnsettingModuleConfigurationDestroysThatConfiguration() {
         $Config = new MasterConfig();
         $Config['module.foo'] = 'something';
@@ -148,6 +159,18 @@ class MasterConfigTest extends \PHPUnit_Framework_TestCase {
         $this->assertSame($first, $second);
     }
 
+    public function testChangingReturnTypeToImmutableGivesUsAnImmutableObject() {
+        $Config = new MasterConfig();
+        $Config['configlet.foo'] = 'something';
+        $Config['configlet.module_return_type'] = MasterConfig::IMMUTABLE;
+
+        $CfgltStore = $Config['configlet'];
+        $this->assertInstanceOf('\\Configlet\\ImmutableConfig', $CfgltStore);
+        $this->assertNotInstanceOf('\\Configlet\\ImmutableProxyConfig', $CfgltStore);
+        $this->assertSame('configlet', $CfgltStore->getModuleName());
+        $this->assertSame('something', $CfgltStore['foo']);
+    }
+
     public function testIteratingOverConfigs() {
         $Config = new MasterConfig();
         $Config['foo'] = 'getting app module';
@@ -164,19 +187,7 @@ class MasterConfigTest extends \PHPUnit_Framework_TestCase {
         $this->assertSame($expected, $actual);
     }
 
-    public function testSettingModuleReturnTypeToImmutableGivesUsAnImmutableObject() {
-        $Config = new MasterConfig();
-        $Config['configlet.foo'] = 'something';
-        $Config['configlet.module_return_type'] = MasterConfig::IMMUTABLE;
-
-        $CfgltStore = $Config['configlet'];
-        $this->assertInstanceOf('\\Configlet\\ImmutableConfig', $CfgltStore);
-        $this->assertNotInstanceOf('\\Configlet\\ImmutableProxyConfig', $CfgltStore);
-        $this->assertSame('configlet', $CfgltStore->getModuleName());
-        $this->assertSame('something', $CfgltStore['foo']);
-    }
-
-    public function testSettingModuleWithEmptyStringThrowsException() {
+    public function testSettingModuleWithEmptyArrayThrowsException() {
         $Config = new MasterConfig();
         $message = 'A Configlet\\Config key must be a string and a \'array\' was given';
         $this->setExpectedException('\\Configlet\\Exception\\IllegalConfigOperationException', $message);
