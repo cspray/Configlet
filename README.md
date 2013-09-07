@@ -42,9 +42,9 @@ Let's take a look at some of the different ways to use Configlet to provide a ho
 ```php
 <?php
 
-use \Configlet\AppConfig;
+use \Configlet\MasterConfig;
 
-$config = new AppConfig();
+$config = new MasterConfig();
 
 $config['debug'] = true;
 $config['foo'] = 'bar';
@@ -61,7 +61,7 @@ var_dump($config['module.param']); // string 'configlet' (length=9)
 
 Pretty simple, huh? But, what's going on with the 'module' param dumping an object and what in the world is an `ImmutableProxyConfig`? Well, I'm glad you asked!
 
-All configurations applied to a `Configlet\AppConfig` are done in the form:
+All configurations applied to a `Configlet\MasterConfig` are done in the form:
 
 `<module>.<parameter>`
 
