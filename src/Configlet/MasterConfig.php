@@ -22,7 +22,7 @@ use \ArrayIterator;
  * @property \Configlet\Config[] $modules
  * @property \Configlet\Config[] $proxyCache
  */
-class AppConfig implements IteratorAggregate, Config {
+class MasterConfig implements IteratorAggregate, Config {
 
     use ConfigKeyValidator;
 
@@ -93,7 +93,6 @@ class AppConfig implements IteratorAggregate, Config {
      */
     public function offsetGet($offset) {
         $this->validateKey($offset);
-
         if (isset($this->modules[$offset])) {
             return $this->getModuleConfig($offset);
         }
@@ -116,6 +115,10 @@ class AppConfig implements IteratorAggregate, Config {
      */
     public function offsetSet($offset, $value) {
         $this->validateKey($offset);
+        if (isset($this->modules[$offset])) {
+            $message = 'You may not set a parameter that shares a name with a module configuration';
+            throw new IllegalConfigOperationException($message);
+        }
 
         list($module, $parameter) = $this->getModuleAndParameter($offset);
         if (!isset($this->modules[$module])) {
@@ -126,25 +129,28 @@ class AppConfig implements IteratorAggregate, Config {
     }
 
     /**
-     * (PHP 5 &gt;= 5.0.0)<br/>
-     * Offset to unset
-     * @link http://php.net/manual/en/arrayaccess.offsetunset.php
-     * @param mixed $offset <p>
-     * The offset to unset.
-     * </p>
+     * Will destroy a module configuration parameter or an entire module configuration.
+     *
+     * @param string $offset
      * @return void
      */
     public function offsetUnset($offset) {
         $this->validateKey($offset);
+        if (isset($this->modules[$offset])) {
+            unset($this->modules[$offset]);
+            return;
+        }
+
         unset($this->modules[self::APP_MODULE][$offset]);
     }
 
     private function getModuleConfig($module) {
-        if ($this['configlet.module_return_type'] === self::MUTABLE) {
+        $moduleReturnType = $this['configlet.module_return_type'];
+        if ($moduleReturnType === self::MUTABLE) {
             return $this->modules[$module];
         }
 
-        if ($this['configlet.module_return_type'] === self::IMMUTABLE) {
+        if ($moduleReturnType === self::IMMUTABLE) {
             $data = [];
             foreach($this->modules[$module] as $key => $val) {
                 $data[$key] = $val;
