@@ -71,33 +71,44 @@ class MasterConfig implements IteratorAggregate, Config {
     }
 
     /**
+     * Returns a boolean value for whether key matching $parameter can be found.
      *
+     * This implementation will return true if $offset is a name of a module with
+     * a configuration.
      *
-     * @param string $offset
+     * @param string $parameter
      * @return boolean
      */
-    public function offsetExists($offset) {
-        $this->validateKey($offset);
-        if (isset($this->modules[$offset])) {
+    public function offsetExists($parameter) {
+        $this->validateKey($parameter);
+        if (isset($this->modules[$parameter])) {
             return true;
         }
 
-        list($module, $parameter) = $this->getModuleAndParameter($offset);
+        list($module, $parameter) = $this->getModuleAndParameter($parameter);
         return isset($this->modules[$module][$parameter]);
     }
 
     /**
+     * Returns a value associated to $parameter or null if that value could not
+     * be found.
      *
-     * @param string $offset
+     * If $parameter matches a module with a configuration a Configlet\Config
+     * implementation will be returned. You can adjust the type of implementation
+     * returned by setting MasterConfig[configlet.module_return_type].
+     *
+     * @param string $parameter
      * @return mixed
+     *
+     * @see /doc/002-configuring-configlet.md
      */
-    public function offsetGet($offset) {
-        $this->validateKey($offset);
-        if (isset($this->modules[$offset])) {
-            return $this->getModuleConfig($offset);
+    public function offsetGet($parameter) {
+        $this->validateKey($parameter);
+        if (isset($this->modules[$parameter])) {
+            return $this->getModuleConfig($parameter);
         }
 
-        list($module, $parameter) = $this->getModuleAndParameter($offset);
+        list($module, $parameter) = $this->getModuleAndParameter($parameter);
 
         if (!isset($this->modules[$module])) {
             return null;
@@ -107,20 +118,26 @@ class MasterConfig implements IteratorAggregate, Config {
     }
 
     /**
-     * @param string $offset
+     * Will set the configuration $parameter to associated value.
+     *
+     * If the $parameter is the name of a module with a configuration set an
+     * exception will be thrown as this is considered an illegal operation for
+     * this configuration.
+     *
+     * @param string $parameter
      * @param mixed $value
      * @return void
      *
      * @throws \Configlet\Exception\IllegalConfigOperationException
      */
-    public function offsetSet($offset, $value) {
-        $this->validateKey($offset);
-        if (isset($this->modules[$offset])) {
+    public function offsetSet($parameter, $value) {
+        $this->validateKey($parameter);
+        if (isset($this->modules[$parameter])) {
             $message = 'You may not set a parameter that shares a name with a module configuration';
             throw new IllegalConfigOperationException($message);
         }
 
-        list($module, $parameter) = $this->getModuleAndParameter($offset);
+        list($module, $parameter) = $this->getModuleAndParameter($parameter);
         if (!isset($this->modules[$module])) {
             $this->modules[$module] = new MutableConfig($module);
         }
@@ -131,19 +148,24 @@ class MasterConfig implements IteratorAggregate, Config {
     /**
      * Will destroy a module configuration parameter or an entire module configuration.
      *
-     * @param string $offset
+     * @param string $parameter
      * @return void
      */
-    public function offsetUnset($offset) {
-        $this->validateKey($offset);
-        if (isset($this->modules[$offset])) {
-            unset($this->modules[$offset]);
+    public function offsetUnset($parameter) {
+        $this->validateKey($parameter);
+        if (isset($this->modules[$parameter])) {
+            unset($this->modules[$parameter]);
             return;
         }
 
-        unset($this->modules[self::APP_MODULE][$offset]);
+        list($module, $parameter) = $this->getModuleAndParameter($parameter);
+        unset($this->modules[$module][$parameter]);
     }
 
+    /**
+     * @param string $module
+     * @return \Configlet\Config
+     */
     private function getModuleConfig($module) {
         $moduleReturnType = $this['configlet.module_return_type'];
         if ($moduleReturnType === self::MUTABLE) {
@@ -166,6 +188,10 @@ class MasterConfig implements IteratorAggregate, Config {
         return $this->proxyCache[$module];
     }
 
+    /**
+     * @param string $offset
+     * @return array
+     */
     private function getModuleAndParameter($offset) {
         $return = [self::APP_MODULE, $offset];
 
@@ -179,6 +205,11 @@ class MasterConfig implements IteratorAggregate, Config {
         return $return;
     }
 
+    /**
+     * Allows to iterate over the module configurations set.
+     *
+     * @return \ArrayIterator
+     */
     public function getIterator() {
         return new ArrayIterator($this->modules);
     }
