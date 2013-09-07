@@ -2,10 +2,23 @@
     "name": "cspray/configlet",
     "description": "Library for managing configurations in PHP applications",
     "keywords": ["php", "configuration"],
+    "homepage": "http://github.com/cspray/Configlet",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Charles Sprayberry",
+            "email": "cspray@gmail.com",
+            "homepage": "http://cspray.github.io",
+            "role": "Benevolent Dictator for Life"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "ext-spl": "*"
+    },
     "autoload": {
         "psr-0": {
             "Configlet\\": "src/"
         }
     }
-
 }
