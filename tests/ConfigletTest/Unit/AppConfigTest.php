@@ -136,7 +136,7 @@ class AppConfigTest extends \PHPUnit_Framework_TestCase {
 
     public function testSettingModuleWithEmptyStringThrowsException() {
         $Config = new AppConfig();
-        $message = 'A configuration key must be a string and a value with type \'array\' was provided';
+        $message = 'A Configlet\\Config key must be a string and a \'array\' was given';
         $this->setExpectedException('\\Configlet\\Exception\\IllegalConfigOperationException', $message);
         $Config[[]] = 'something';
 
