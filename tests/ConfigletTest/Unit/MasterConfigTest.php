@@ -194,4 +194,10 @@ class MasterConfigTest extends \PHPUnit_Framework_TestCase {
         $Config[[]] = 'something';
     }
 
+    public function testDefaultConfigletCreatedWhenMasterConfigConstructed() {
+        $Config = new MasterConfig();
+        $this->assertSame($Config['configlet.module_return_type'], MasterConfig::IMMUTABLE_PROXY);
+    }
+
+
 }
