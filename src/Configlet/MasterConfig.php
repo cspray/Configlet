@@ -58,6 +58,11 @@ class MasterConfig implements IteratorAggregate, Config {
      */
     public function __construct() {
         $this->modules[self::APP_MODULE] = new MutableConfig(self::APP_MODULE);
+        $this->setDefaultConfigletConfiguration();
+    }
+
+    private function setDefaultConfigletConfiguration() {
+        $this['configlet.module_return_type'] = self::IMMUTABLE_PROXY;
     }
 
     /**
