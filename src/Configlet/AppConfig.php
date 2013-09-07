@@ -13,6 +13,7 @@
 namespace Configlet;
 
 use \Configlet\Config;
+use \Configlet\ConfigTrait\ConfigKeyValidator;
 use \Configlet\Exception\IllegalConfigOperationException;
 use \IteratorAggregate;
 use \ArrayIterator;
@@ -22,6 +23,8 @@ use \ArrayIterator;
  * @property \Configlet\Config[] $proxyCache
  */
 class AppConfig implements IteratorAggregate, Config {
+
+    use ConfigKeyValidator;
 
     const APP_MODULE = 'app';
 
@@ -55,7 +58,6 @@ class AppConfig implements IteratorAggregate, Config {
      */
     public function __construct() {
         $this->modules[self::APP_MODULE] = new MutableConfig(self::APP_MODULE);
-
     }
 
     /**
@@ -75,6 +77,7 @@ class AppConfig implements IteratorAggregate, Config {
      * @return boolean
      */
     public function offsetExists($offset) {
+        $this->validateKey($offset);
         if (isset($this->modules[$offset])) {
             return true;
         }
@@ -89,6 +92,8 @@ class AppConfig implements IteratorAggregate, Config {
      * @return mixed
      */
     public function offsetGet($offset) {
+        $this->validateKey($offset);
+
         if (isset($this->modules[$offset])) {
             return $this->getModuleConfig($offset);
         }
@@ -110,13 +115,9 @@ class AppConfig implements IteratorAggregate, Config {
      * @throws \Configlet\Exception\IllegalConfigOperationException
      */
     public function offsetSet($offset, $value) {
-        if (!\is_string($offset)) {
-            $message = 'A configuration key must be a string and a value with type \'%s\' was provided';
-            throw new IllegalConfigOperationException(\sprintf($message, \gettype($offset)));
-        }
+        $this->validateKey($offset);
 
         list($module, $parameter) = $this->getModuleAndParameter($offset);
-
         if (!isset($this->modules[$module])) {
             $this->modules[$module] = new MutableConfig($module);
         }
@@ -134,6 +135,7 @@ class AppConfig implements IteratorAggregate, Config {
      * @return void
      */
     public function offsetUnset($offset) {
+        $this->validateKey($offset);
         unset($this->modules[self::APP_MODULE][$offset]);
     }
 
@@ -154,8 +156,6 @@ class AppConfig implements IteratorAggregate, Config {
         if (!isset($this->proxyCache[$module])) {
             $this->proxyCache[$module] = new ImmutableProxyConfig($this->modules[$module]);
         }
-
-
 
         return $this->proxyCache[$module];
     }

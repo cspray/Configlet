@@ -13,12 +13,15 @@
 
 namespace Configlet;
 
+use Configlet\ConfigTrait\ConfigKeyValidator;
 use \Configlet\Exception\IllegalConfigOperationException;
 use \IteratorAggregate;
 use \ArrayIterator;
 
 
 abstract class BaseConfig implements IteratorAggregate, Config {
+
+    use ConfigKeyValidator;
 
     /**
      * @property array
@@ -62,6 +65,7 @@ abstract class BaseConfig implements IteratorAggregate, Config {
      * @return boolean
      */
     public function offsetExists($offset) {
+        $this->validateKey($offset);
         return \array_key_exists($offset, $this->store);
     }
 
@@ -70,6 +74,7 @@ abstract class BaseConfig implements IteratorAggregate, Config {
      * @return mixed
      */
     public function offsetGet($offset) {
+        $this->validateKey($offset);
         if (!isset($this[$offset])) {
             return null;
         }
