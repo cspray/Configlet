@@ -18,8 +18,8 @@ namespace Configlet;
  * sets the configuration.
  *
  * By utilizing this object you have an amount of assurance that the configuration
- * given to a consumer cannot be changed and that, if that configuration is
- * properly utilized, the values you expect will be there before and after the
+ * given to a consumer cannot be changed by that consumer and that, if the configuration
+ * is properly utilized, the values you expect will be there before and after the
  * operation.
  */
 class ImmutableProxyConfig extends ImmutableConfig {

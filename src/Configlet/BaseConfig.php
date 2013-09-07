@@ -18,7 +18,6 @@ use \Configlet\Exception\IllegalConfigOperationException;
 use \IteratorAggregate;
 use \ArrayIterator;
 
-
 abstract class BaseConfig implements IteratorAggregate, Config {
 
     use ConfigKeyValidator;
