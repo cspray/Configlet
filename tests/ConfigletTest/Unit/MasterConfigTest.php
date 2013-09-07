@@ -64,6 +64,13 @@ class MasterConfigTest extends \PHPUnit_Framework_TestCase {
         $Config['module'] = 'something';
     }
 
+    public function testSettingParameterWithMultipleDotsSeparatesModuleParametersProperly() {
+        $Config = new MasterConfig();
+        $Config['module.foo.parameter'] = 'configlet';
+        $this->assertSame('configlet', $Config['module.foo.parameter'], 'We are not getting appropriate value from MasterConfig');
+        $this->assertSame('configlet', $Config['module']['foo.parameter'], 'We are not getting appropriate value from Module config');
+    }
+
     public function testGettingModuleParameterNotSetReturnsNull() {
         $Config = new MasterConfig();
         $this->assertNull($Config['foo.bar']);

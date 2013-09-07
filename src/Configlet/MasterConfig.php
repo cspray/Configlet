@@ -204,7 +204,7 @@ class MasterConfig implements IteratorAggregate, Config {
         // if you really did have the '.' as the first character that means
         // when we explode our $module is '.' which makes no sense
         if (\strpos($offset, '.')) {
-            $return = \explode('.', $offset);
+            $return = \explode('.', $offset, 2);
         }
 
         return $return;
