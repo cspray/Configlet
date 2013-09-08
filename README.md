@@ -2,13 +2,15 @@
 
 [![Build Status](https://travis-ci.org/cspray/Configlet.png?branch=master)](https://travis-ci.org/cspray/Configlet) [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/cspray/Configlet/badges/quality-score.png?s=a2c6952c866b900626fa4e0ca79c7599c587cfbc)](https://scrutinizer-ci.com/g/cspray/Configlet/) [![Code Coverage](https://scrutinizer-ci.com/g/cspray/Configlet/badges/coverage.png?s=47ffbd796840229593c9f31f090683f7c45e65d2)](https://scrutinizer-ci.com/g/cspray/Configlet/)
 
-> This library is still under construction and has not been released yet
+A PHP library to help manage your application and module configs simply and easily.
 
-A PHP library to help manage your application and module configs simply and easily. Check out the Roadmap in `/doc/000-roadmap.md` for new and upcoming features.
+- Check out the Roadmap in `/doc/000-roadmap.md` for new and upcoming features.
+- Check out some basic usage below or examples in `/doc/examples`
 
 ## Project Goals
 
 - Provide a simple, powerful API for creating and managing various configurations for your app and modules within that app
+- Not be a dependency injection container; Configlet is for your configuration
 - Build all components using [SOLID][solid], readable and thoroughly unit-tested code
 
 ## Installation
