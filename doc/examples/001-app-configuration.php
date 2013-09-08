@@ -1,8 +1,10 @@
 <?php
 
+require_once realpath('../../vendor/autoload.php');
+
 /**
- * In this example we take a look at all the various ways of working with the MasterConfig
- * object and the 'app' Module configuration.
+ * In this example we take a look at working with the 'app' module configuration
+ * of the MasterConfig implementation
  */
 
 use \Configlet\MasterConfig;
@@ -38,7 +40,7 @@ $Config['module.param'] = 'foo';
  */
 
 $AppConfig = $Config[MasterConfig::APP_MODULE];
-\var_dump($AppConfig['foo']); // string 'bar' (length=3)
+\var_dump($AppConfig['bar']); // int 1
 \var_dump($AppConfig['module.param']); // null
 \var_dump($AppConfig['module']); // null
 
