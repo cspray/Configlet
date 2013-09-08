@@ -1,6 +1,7 @@
 ## 0.1.0
 
 - Initial implementation with Config interface
-- AppConfig, MutableConfig, ImmutableConfig, ImmutableProxyConfig implementations provided
+- MasterConfig, MutableConfig, ImmutableConfig, ImmutableProxyConfig implementations provided
 - General-use IllegalConfigOperationException exception added
-
+- BaseConfig implementation allowing generic module name, getting and existence checking functionality
+- Adding various docs including: Roadmap, Getting Started, Configuring Configlet, Groking Configlet and examples on usage
