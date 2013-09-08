@@ -50,3 +50,8 @@ So, we've used Configlet to store a configuration value indicating our applicati
 
     Configlet takes care of all the checking for the presence of configuration values and can gracefully handle configuration values that aren't present; without causing an error to be triggered in your application. Ultimately this makes for less boilerplate code you have to deal with when working with configuration values.
 
+## Next steps
+
+- Figure out how you can configure Configlet to suit your needs by checking out the next tutorial `/doc/002-configuring-configlet.md`
+- Fully grok Configlet and the caveats of working with the library by checking out `/doc/003-groking-configlet.md`
+- See some examples for ideas on working with Configlet by checking out `/doc/examples`
