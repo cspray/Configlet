@@ -8,4 +8,4 @@
 ## 0.3.0
 
 - Add `Configlet\Config::lock()` method that prevents even mutable configs from being changed after it is called.
-
+- Add `Configlet\MasterConfig::setModule(string)` that will allow a configuration value to be seen as a module name even before any configuration has been set for that module
