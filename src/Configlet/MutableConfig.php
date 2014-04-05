@@ -24,11 +24,7 @@ class MutableConfig extends BaseConfig {
      * @throws \Configlet\Exception\IllegalConfigOperationException
      */
     public function offsetSet($offset, $value) {
-        if (!\is_string($offset)) {
-            $message = 'The key for a configuration MUST be a string value but \'%s\' was given';
-            throw new IllegalConfigOperationException(\sprintf($message, \gettype($offset)));
-        }
-
+        $this->validateKey($offset);
         $this->store[$offset] = $value;
     }
 
@@ -37,6 +33,7 @@ class MutableConfig extends BaseConfig {
      * @return void
      */
     public function offsetUnset($offset) {
+        $this->validateKey($offset);
         unset($this->store[$offset]);
     }
 

@@ -7,8 +7,6 @@
 
 namespace ConfigletTest\Unit\Config;
 
-use \ConfigletTest\Stubs\BaseConfigStub;
-
 class BaseConfigTest extends \PHPUnit_Framework_TestCase {
 
     public function testGettingModuleName() {

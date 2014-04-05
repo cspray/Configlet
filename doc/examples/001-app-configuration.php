@@ -1,13 +1,15 @@
 <?php
 
+require_once realpath('../../vendor/autoload.php');
+
 /**
- * In this example we take a look at all the various ways of working with the AppConfig
- * object and the 'app' Module configuration.
+ * In this example we take a look at working with the 'app' module configuration
+ * of the MasterConfig implementation
  */
 
-use \Configlet\AppConfig;
+use \Configlet\MasterConfig;
 
-$Config = new AppConfig();
+$Config = new MasterConfig();
 $Config['foo'] = 'bar'; // OR $Config['app.foo'] = 'bar';
 $Config['bar'] = 1;
 $Config['baz'] = function() {};
@@ -16,7 +18,7 @@ $Config['foobar'] = new \stdClass();
 /**
  * In the above code we show that we can set values to just about anything that
  * we want. Also note that there are no module separator, '.', in the configuration
- * keys set. With the AppConfig implementation this means that we implicitly append
+ * keys set. With the MasterConfig implementation this means that we implicitly append
  * the 'app' module to these configuration parameters.
  *
  * Let's take a look at how we can retrieve information back
@@ -29,7 +31,7 @@ $Config['module.param'] = 'foo';
 
 /**
  * Ok, now we've set our app configuration to have a module; we really don't care
- * about the module configuration, only how it impacts the state of the AppConfig
+ * about the module configuration, only how it impacts the state of the MasterConfig
  * implementation.
  *
  * Now, let's take a look at the 'app' module configuration. It will only hold the
@@ -37,8 +39,8 @@ $Config['module.param'] = 'foo';
  * will be not present.
  */
 
-$AppConfig = $Config[AppConfig::APP_MODULE];
-\var_dump($AppConfig['foo']); // string 'bar' (length=3)
+$AppConfig = $Config[MasterConfig::APP_MODULE];
+\var_dump($AppConfig['bar']); // int 1
 \var_dump($AppConfig['module.param']); // null
 \var_dump($AppConfig['module']); // null
 
