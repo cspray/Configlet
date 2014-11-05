@@ -12,6 +12,8 @@
 
 namespace Configlet;
 
+use IteratorIterator;
+
 /**
  * The primary use for this configuration is that you can provide a read-only end
  * to consumers of the configuration while still allowing writing on the end that
@@ -27,13 +29,13 @@ class ImmutableProxyConfig extends ImmutableConfig {
     /**
      * @property \Configlet\Config
      */
-    private $Proxy;
+    private $proxy;
 
     /**
-     * @param \Configlet\Config $Config
+     * @param \Configlet\Config $config
      */
-    public function __construct(Config $Config) {
-        $this->Proxy = $Config;
+    public function __construct(Config $config) {
+        $this->proxy = $config;
     }
 
     /**
@@ -42,7 +44,7 @@ class ImmutableProxyConfig extends ImmutableConfig {
      * @return string
      */
     public function getModuleName() {
-        return $this->Proxy->getModuleName();
+        return $this->proxy->getModuleName();
     }
 
     /**
@@ -52,7 +54,7 @@ class ImmutableProxyConfig extends ImmutableConfig {
      * @return boolean
      */
     public function offsetExists($offset) {
-        return isset($this->Proxy[$offset]);
+        return isset($this->proxy[$offset]);
     }
 
     /**
@@ -62,7 +64,11 @@ class ImmutableProxyConfig extends ImmutableConfig {
      * @return mixed
      */
     public function offsetGet($offset) {
-        return $this->Proxy[$offset];
+        return $this->proxy[$offset];
+    }
+
+    public function getIterator() {
+        return new IteratorIterator($this->proxy);
     }
 
 }

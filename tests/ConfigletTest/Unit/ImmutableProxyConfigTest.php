@@ -7,51 +7,67 @@
 
 namespace ConfigletTest\Unit\Config;
 
-use \Configlet\ImmutableProxyConfig;
+use Configlet\ImmutableProxyConfig;
+use Configlet\MutableConfig;
+use ConfigletTest\Stubs\IterableConfig;
 
 class ImmutableProxyConfigTest extends \PHPUnit_Framework_TestCase {
 
     public function testSettingImmutableProxyThrowsException() {
-        $Config = new ImmutableProxyConfig($this->getMock('\\ConfigletTest\\Stubs\\IterableConfig'));
+        $config = new ImmutableProxyConfig($this->getMock('\\ConfigletTest\\Stubs\\IterableConfig'));
         $message = 'You may not change the value of a Configlet\\ImmutableConfig';
         $this->setExpectedException('\\Configlet\\Exception\\IllegalConfigOperationException', $message);
-        $Config['foo'] = 'nah uh, not gonna happen';
+        $config['foo'] = 'nah uh, not gonna happen';
     }
 
     public function testUnsettingImmutableProxyThrowException() {
-        $Config = new ImmutableProxyConfig($this->getMock('\\ConfigletTest\\Stubs\\IterableConfig'));
+        $config = new ImmutableProxyConfig($this->getMock('\\ConfigletTest\\Stubs\\IterableConfig'));
         $message = 'You may not unset the value of a Configlet\\ImmutableConfig';
         $this->setExpectedException('\\Configlet\\Exception\\IllegalConfigOperationException', $message);
-        unset($Config['foo']);
+        unset($config['foo']);
     }
 
     public function testCallingOffsetGetCallsProxy() {
-        $Config = new ImmutableProxyConfig($Mock = $this->getMock('\\ConfigletTest\\Stubs\\IterableConfig'));
-        $Mock->expects($this->once())
+        $config = new ImmutableProxyConfig($mock = $this->getMock('\\ConfigletTest\\Stubs\\IterableConfig'));
+        $mock->expects($this->once())
              ->method('offsetGet')
              ->with('foo')
              ->will($this->returnValue('bar'));
 
-        $this->assertSame('bar', $Config['foo']);
+        $this->assertSame('bar', $config['foo']);
     }
 
     public function testCallingOffsetExistsCallsProxy() {
-        $Config = new ImmutableProxyConfig($Mock = $this->getMock('\\ConfigletTest\\Stubs\\IterableConfig'));
-        $Mock->expects($this->once())
+        $config = new ImmutableProxyConfig($mock = $this->getMock('\\ConfigletTest\\Stubs\\IterableConfig'));
+        $mock->expects($this->once())
              ->method('offsetExists')
              ->with('foo')
              ->will($this->returnValue(true));
 
-        $this->assertTrue(isset($Config['foo']));
+        $this->assertTrue(isset($config['foo']));
     }
 
     public function testCallingGetModuleNameCallsProxy() {
-        $Config = new ImmutableProxyConfig($Mock = $this->getMock('\\ConfigletTest\\Stubs\\IterableConfig'));
-        $Mock->expects($this->once())
+        $config = new ImmutableProxyConfig($mock = $this->getMock('\\ConfigletTest\\Stubs\\IterableConfig'));
+        $mock->expects($this->once())
              ->method('getModuleName')
              ->will($this->returnValue('foo'));
 
-        $this->assertSame('foo', $Config->getModuleName());
+        $this->assertSame('foo', $config->getModuleName());
+    }
+
+    public function testIteratingOverImmutableProxy() {
+        $proxy = new MutableConfig('something');
+        $config = new ImmutableProxyConfig($proxy);
+        $proxy['a'] = 'foo';
+        $proxy['b'] = 'bar';
+        $proxy['c'] = 'baz';
+        $actual = [];
+        foreach ($config as $key => $val) {
+            $actual[$key] = $val;
+        }
+
+        $this->assertSame(['a' => 'foo', 'b' => 'bar', 'c' => 'baz'], $actual);
     }
 
 }
